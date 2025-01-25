@@ -3,7 +3,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Tag } from "@/components/tag";
 import i18next from "@/i18n";
 
-export function RoomCard() {
+type RoomCardProps = {
+  playerName: string;
+  roomDescription: string;
+  slots: number;
+  gameMode: string;
+  ranked?: string[];
+};
+
+export function RoomCard({
+  playerName,
+  roomDescription,
+  slots,
+  gameMode,
+  ranked,
+}: RoomCardProps) {
   return (
     <View className="rounded-lg bg-customized-blue-100 p-4">
       <View className="flex-row gap-4">
@@ -20,18 +34,22 @@ export function RoomCard() {
         </LinearGradient>
 
         <View className="flex-1">
-          <Text className="text-lg font-bold text-white">Claudio Galvão</Text>
-          <Text className="text-white flex">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-            scelerisque, libero eu fringilla molestie, mi ligula fermentum
-            justo, at volutpat.
-          </Text>
+          <Text className="text-lg font-bold text-white">{playerName}</Text>
+          <Text className="text-white flex">{roomDescription}</Text>
         </View>
       </View>
       <View className="flex-row flex-wrap pt-4 gap-2">
-        <Tag name={i18next.t("slots", { count: 2 })} iconName="users" />
-        <Tag name="Sem classificação" iconName="layers" />
-        <Tag name="Diamante I, +2" iconName="award" />
+        <Tag name={i18next.t("slots", { count: slots })} iconName="users" />
+        <Tag name={gameMode} iconName="layers" />
+        {ranked &&
+          (ranked.length > 1 ? (
+            <Tag
+              name={`${ranked[0]}, +${ranked?.length - 1}`}
+              iconName="award"
+            />
+          ) : (
+            <Tag name={`${ranked[0]}`} iconName="award" />
+          ))}
       </View>
     </View>
   );
