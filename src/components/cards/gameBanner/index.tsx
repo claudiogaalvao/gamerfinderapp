@@ -8,9 +8,18 @@ import { Image, View, Text } from "react-native";
 type GameBannerProps = {
   imageUri: string;
   locked: boolean;
+  subscriptions: number;
+  minSubscriptions: number;
+  openRooms: number;
 };
 
-export function GameBanner({ imageUri, locked }: GameBannerProps) {
+export function GameBanner({
+  imageUri,
+  locked,
+  openRooms,
+  subscriptions,
+  minSubscriptions,
+}: GameBannerProps) {
   return (
     <View className="relative items-center justify-center">
       <Image
@@ -22,9 +31,12 @@ export function GameBanner({ imageUri, locked }: GameBannerProps) {
       />
 
       {locked ? (
-        <SubscriptionsCounter currentSubscriptions={25} minSubscriptions={40} />
+        <SubscriptionsCounter
+          subscriptions={subscriptions}
+          minSubscriptions={minSubscriptions}
+        />
       ) : (
-        <RoomsCount roomsCount={2} />
+        <RoomsCount roomsCount={openRooms} />
       )}
 
       {locked ? (

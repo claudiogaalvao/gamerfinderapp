@@ -1,14 +1,57 @@
+import gamesService, { Game } from "@/api/services/gamesService";
 import { GameBanner } from "@/components/cards/gameBanner";
-import { ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const data = await gamesService.getGames();
+        setGames(data);
+      } catch (error) {
+        setError("Erro ao carregar usuários");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGames();
+  }, []);
+
+  if (loading) {
+    return (
+      <View>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView className="bg-customized-blue-900 p-4">
       <View className="flex-1 gap-2">
-        <GameBanner
-          imageUri="https://assets.altarofgaming.com/wp-content/uploads/2021/11/valorant-game-cover-altar-of-gaming.jpg"
-          locked={false}
-        />
+        {games.map((game) => (
+          <GameBanner
+            key={game.id}
+            imageUri={game.bannerUrl}
+            locked={game.locked}
+            subscriptions={game.subscriptions}
+            minSubscriptions={game.minSubscriptions}
+            openRooms={game.rooms}
+          />
+        ))}
       </View>
     </ScrollView>
   );

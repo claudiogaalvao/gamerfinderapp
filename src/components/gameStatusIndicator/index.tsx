@@ -15,19 +15,19 @@ export function RoomsCount({ roomsCount }: RoomsCountProps) {
 }
 
 type SubscriptionsCounterProps = {
-  currentSubscriptions: number;
+  subscriptions: number;
   minSubscriptions: number;
 };
 
 export function SubscriptionsCounter({
-  currentSubscriptions,
+  subscriptions,
   minSubscriptions,
 }: SubscriptionsCounterProps) {
   return (
     <View className="absolute top-3 right-3 flex-row gap-2 items-center justify-center bg-customized-blue-100 py-3 px-5 rounded-full">
       <Feather name="plus" size={18} color="white" />
       <Text className="text-white text-lg">
-        {currentSubscriptions}/{minSubscriptions}
+        {subscriptions}/{minSubscriptions}
       </Text>
     </View>
   );
