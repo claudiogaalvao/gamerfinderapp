@@ -14,7 +14,7 @@ export default function Index() {
         const data = await gamesService.getGames();
         setGames(data);
       } catch (error) {
-        setError("Erro ao carregar usuários");
+        setError("Error loading games");
       } finally {
         setLoading(false);
       }
@@ -22,6 +22,32 @@ export default function Index() {
 
     fetchGames();
   }, []);
+
+  const handleSubscription = async (gameId: number, subscribe: boolean) => {
+    try {
+      if (subscribe) {
+        await gamesService.subscribeToGame(gameId);
+      } else {
+        await gamesService.unsubscribeFromGame(gameId);
+      }
+
+      setGames((prevGames) =>
+        prevGames.map((game) =>
+          game.id === gameId
+            ? {
+                ...game,
+                subscribed: subscribe,
+                subscriptions: subscribe
+                  ? game.subscriptions + 1
+                  : game.subscriptions - 1,
+              }
+            : game
+        )
+      );
+    } catch (error) {
+      console.log("Error on handle subscription");
+    }
+  };
 
   if (loading) {
     return (
@@ -47,9 +73,13 @@ export default function Index() {
             key={game.id}
             imageUri={game.bannerUrl}
             locked={game.locked}
+            subscribed={game.subscribed}
             subscriptions={game.subscriptions}
             minSubscriptions={game.minSubscriptions}
-            openRooms={game.rooms}
+            rooms={game.rooms}
+            onSubscriptionPressed={(subscribe) => {
+              handleSubscription(game.id, subscribe);
+            }}
           />
         ))}
       </View>

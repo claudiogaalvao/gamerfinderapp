@@ -13,7 +13,7 @@ const api = async <T>(
   endpoint: string,
   method: HttpMethod = "GET",
   body?: any
-): Promise<T> => {
+): Promise<T | void> => {
   const headers = {
     "Content-Type": "application/json",
   };
@@ -33,6 +33,9 @@ const api = async <T>(
     if (!response.ok) {
       console.error("REQUEST ERROR");
       throw new Error(`Request error: ${response.statusText}`);
+    }
+    if (response.status === 204) {
+      return;
     }
     console.log("REQUEST SUCCEED");
     const data: T = await response.json();

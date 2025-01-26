@@ -8,17 +8,21 @@ import { Image, View, Text } from "react-native";
 type GameBannerProps = {
   imageUri: string;
   locked: boolean;
+  subscribed: boolean;
   subscriptions: number;
   minSubscriptions: number;
-  openRooms: number;
+  rooms: number;
+  onSubscriptionPressed: (subscribe: boolean) => void;
 };
 
 export function GameBanner({
   imageUri,
   locked,
-  openRooms,
+  rooms: openRooms,
+  subscribed,
   subscriptions,
   minSubscriptions,
+  onSubscriptionPressed,
 }: GameBannerProps) {
   return (
     <View className="relative items-center justify-center">
@@ -32,8 +36,10 @@ export function GameBanner({
 
       {locked ? (
         <SubscriptionsCounter
+          subscribed={subscribed}
           subscriptions={subscriptions}
           minSubscriptions={minSubscriptions}
+          onPress={onSubscriptionPressed}
         />
       ) : (
         <RoomsCount roomsCount={openRooms} />
